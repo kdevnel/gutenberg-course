@@ -3,6 +3,7 @@ import "./i18n.js";
 /**
  * Import example blocks
  */
+import "./00-my-block";
 import "./01-static";
 import "./02-richtext";
 import "./03-text-alignment-toolbar";
