@@ -2,9 +2,9 @@
 /**
  * Plugin's bootstrap file to launch the plugin.
  *
- * @package     Gutenberg_Courses\Example_Blocks
- * @author      Zac Gordon (@zgordon)
- * @license     GPL2+
+ * @package Gutenberg_Courses\Example_Blocks
+ * @author Zac Gordon (@zgordon)
+ * @license GPL2+
  *
  * @wordpress-plugin
  * Plugin Name: Gutenberg - Example Blocks
@@ -47,7 +47,7 @@ function _get_plugin_directory() {
  * @return string
  */
 function _get_plugin_url() {
-	static $plugin_url;
+  static $plugin_url;
 
 	if ( empty( $plugin_url ) ) {
 		$plugin_url = plugins_url( null, __FILE__ );
