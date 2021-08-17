@@ -1,3 +1,10 @@
+.wp-block-jsforwpblocks-my-block {
+  color: #fff;
+  padding: 1em; }
+
+.entry-content .wp-block-jsforwpblocks-my-block {
+  background: #eeaeca;
+  background: radial-gradient(circle, #eeaeca 0%, #94bbe9 100%); }
 .entry-content .wp-block-jsforwpblocks-static,
 .wp-block-jsforwpblocks-static {
   background: rgba(254, 243, 224, 0.52);
