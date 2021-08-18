@@ -1,7 +1,7 @@
 /**
  * Import block dependencies
  */
-import { icon, wandIcon } from "./icon";
+import icons from "./icon";
 import classnames from "classnames";
 import "./style.scss";
 import "./editor.scss";
@@ -11,9 +11,15 @@ import "./editor.scss";
  */
 const { __ } = wp.i18n;
 const { registerBlockType } = wp.blocks;
-const { RichText, AlignmentToolbar, BlockControls, BlockAlignmentToolbar } =
-  wp.editor;
-const { Dashicon, Toolbar, Button, Tooltip } = wp.components;
+const {
+  RichText,
+  AlignmentToolbar,
+  BlockControls,
+  BlockAlignmentToolbar,
+  InspectorControls,
+} = wp.editor;
+const { Dashicon, Toolbar, Button, Tooltip, PanelBody, PanelRow, FormToggle } =
+  wp.components;
 
 /**
  * Register block
@@ -22,7 +28,7 @@ export default registerBlockType("jsforwpblocks/my-block", {
   title: __("My personal block", "jsforwpblocks"),
   description: __("A block for me to test code", "jsforwpblocks"),
   category: "common",
-  icon,
+  icon: icons.block,
   keywords: [
     __("devnel", "jsforwpblocks"),
     __("testing", "jsforwpblocks"),
@@ -80,34 +86,50 @@ export default registerBlockType("jsforwpblocks/my-block", {
       setAttributes,
     } = props;
     const classes = classnames(className, { magic: magicButton });
-    return (
+    const toggleMagic = () => setAttributes({ magicButton: !magicButton });
+    return [
+      <InspectorControls>
+        <PanelBody title={__("Magic Settings", "jsforwpblocks")}>
+          <PanelRow>
+            <label htmlFor="make-magical-form-toggle">
+              {__("Activate Magic", "jsforwpblocks")}
+            </label>
+            <FormToggle
+              id="make-magical-form-toggle"
+              label={__("Activate Magic", "jsforwpblocks")}
+              checked={magicButton}
+              onChange={toggleMagic}
+            />
+          </PanelRow>
+        </PanelBody>
+      </InspectorControls>,
+      <BlockControls>
+        <BlockAlignmentToolbar
+          value={blockAlignment}
+          onChange={(blockAlignment) => setAttributes({ blockAlignment })}
+        />
+        <AlignmentToolbar
+          value={textAlignment}
+          onChange={(textAlignment) => setAttributes({ textAlignment })}
+        />
+        <Toolbar>
+          <Tooltip text={__("Make Magic", "jsforwpblocks")}>
+            <Button
+              className={classnames(
+                "components-icon-button",
+                "components-toolbar__control",
+                { "is-active": magicButton }
+              )}
+              onClick={toggleMagic}
+            >
+              {icons.wand}
+            </Button>
+          </Tooltip>
+        </Toolbar>
+      </BlockControls>,
       <div className={classes}>
         <h2>{__("UNICORNS!", "jsforwpblocks")}</h2>
         <h3>{__("Description", "jsforwpblocks")}</h3>
-        <BlockControls>
-          <BlockAlignmentToolbar
-            value={blockAlignment}
-            onChange={(blockAlignment) => setAttributes({ blockAlignment })}
-          />
-          <AlignmentToolbar
-            value={textAlignment}
-            onChange={(textAlignment) => setAttributes({ textAlignment })}
-          />
-          <Toolbar>
-            <Tooltip text={__("Make Magic", "jsforwpblocks")}>
-              <Button
-                className={classnames(
-                  "components-icon-button",
-                  "components-toolbar__control",
-                  { "is-active": magicButton }
-                )}
-                onClick={() => setAttributes({ magicButton: !magicButton })}
-              >
-                {wandIcon}
-              </Button>
-            </Tooltip>
-          </Toolbar>
-        </BlockControls>
         <RichText
           tagName="div"
           multiline="p"
@@ -132,8 +154,8 @@ export default registerBlockType("jsforwpblocks/my-block", {
           onChange={(method) => setAttributes({ method })}
           value={method}
         />
-      </div>
-    );
+      </div>,
+    ];
   },
   save: (props) => {
     const {

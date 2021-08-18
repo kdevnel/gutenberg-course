@@ -1,4 +1,6 @@
-const icon = (
+const icons = {};
+
+icons.block = (
   <svg
     width="20px"
     height="20px"
@@ -14,7 +16,7 @@ const icon = (
   </svg>
 );
 
-const wandIcon = (
+icons.wand = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="20px"
@@ -34,4 +36,4 @@ const wandIcon = (
   </svg>
 );
 
-export { icon, wandIcon };
+export default icons;
