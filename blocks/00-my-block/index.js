@@ -10,7 +10,7 @@ import "./editor.scss";
  */
 const { __ } = wp.i18n;
 const { registerBlockType } = wp.blocks;
-const { RichText } = wp.editor;
+const { RichText, AlignmentToolbar, BlockControls } = wp.editor;
 
 /**
  * Register block
@@ -29,6 +29,11 @@ export default registerBlockType("jsforwpblocks/my-block", {
     __("static", "jsforwpblocks"),
   ],
   attributes: {
+    description: {
+      type: "array",
+      source: "children",
+      selector: ".recipe-description",
+    },
     ingredients: {
       type: "array",
       source: "children",
@@ -39,28 +44,40 @@ export default registerBlockType("jsforwpblocks/my-block", {
       source: "children",
       selector: ".recipe-method",
     },
+    textAlignment: {
+      type: "string",
+    },
   },
   edit: (props) => {
     const {
-      attributes: { ingredients, method },
+      attributes: { description, ingredients, method, textAlignment },
       className,
       setAttributes,
     } = props;
-    const onChangeIngredients = (ingredients) => {
-      setAttributes({ ingredients });
-    };
-    const onChangeMethod = (method) => {
-      setAttributes({ method });
-    };
     return (
       <div className={className}>
         <h2>{__("UNICORNS!", "jsforwpblocks")}</h2>
+        <h3>{__("Description", "jsforwpblocks")}</h3>
+        <BlockControls>
+          <AlignmentToolbar
+            value={textAlignment}
+            onChange={(textAlignment) => setAttributes({ textAlignment })}
+          />
+        </BlockControls>
+        <RichText
+          tagName="div"
+          multiline="p"
+          placeholder={__("Add description", "jsforwpblocks")}
+          value={description}
+          style={{ textAlign: textAlignment }}
+          onChange={(description) => setAttributes({ description })}
+        />
         <h3>{__("Ingredients", "jsforwpblocks")}</h3>
         <RichText
           tagName="ul"
           multiline="li"
           placeholder={__("Add ingredient", "jsforwpblocks")}
-          onChange={onChangeIngredients}
+          onChange={(ingredients) => setAttributes({ ingredients })}
           value={ingredients}
         />
         <h3>{__("Method", "jsforwpblocks")}</h3>
@@ -68,7 +85,7 @@ export default registerBlockType("jsforwpblocks/my-block", {
           tagName="ol"
           multiline="li"
           placeholder={__("Add instruction", "jsforwpblocks")}
-          onChange={onChangeMethod}
+          onChange={(method) => setAttributes({ method })}
           value={method}
         />
       </div>
@@ -76,11 +93,15 @@ export default registerBlockType("jsforwpblocks/my-block", {
   },
   save: (props) => {
     const {
-      attributes: { ingredients, method },
+      attributes: { description, ingredients, method, textAlignment },
     } = props;
     return (
       <div>
         <h2>{__("UNICORNS!", "jsforwpblocks")}</h2>
+        <h3>{__("Description", "jsforwpblocks")}</h3>
+        <div class="recipe-description" style={{ textAlign: textAlignment }}>
+          {description}
+        </div>
         <h3>{__("Ingredients", "jsforwpblocks")}</h3>
         <ul class="recipe-ingredients">{ingredients}</ul>
         <h3>{__("Method", "jsforwpblocks")}</h3>
