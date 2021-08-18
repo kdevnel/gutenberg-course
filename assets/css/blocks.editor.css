@@ -1,5 +1,7 @@
 .wp-block-jsforwpblocks-my-block {
-  background: #833ab4;
+  background: #833ab4; }
+
+.wp-block-jsforwpblocks-my-block.magic {
   background: linear-gradient(90deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%); }
 .wp-block-jsforwpblocks-static .sorry.warning {
   background: #C44D58;

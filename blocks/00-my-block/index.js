@@ -1,7 +1,8 @@
 /**
  * Import block dependencies
  */
-import icon from "./icon";
+import { icon, wandIcon } from "./icon";
+import classnames from "classnames";
 import "./style.scss";
 import "./editor.scss";
 
@@ -10,7 +11,9 @@ import "./editor.scss";
  */
 const { __ } = wp.i18n;
 const { registerBlockType } = wp.blocks;
-const { RichText, AlignmentToolbar, BlockControls } = wp.editor;
+const { RichText, AlignmentToolbar, BlockControls, BlockAlignmentToolbar } =
+  wp.editor;
+const { Dashicon, Toolbar, Button, Tooltip } = wp.components;
 
 /**
  * Register block
@@ -19,10 +22,7 @@ export default registerBlockType("jsforwpblocks/my-block", {
   title: __("My personal block", "jsforwpblocks"),
   description: __("A block for me to test code", "jsforwpblocks"),
   category: "common",
-  icon: {
-    background: "rgba(254, 243, 224, 0.52)",
-    src: icon,
-  },
+  icon,
   keywords: [
     __("devnel", "jsforwpblocks"),
     __("testing", "jsforwpblocks"),
@@ -47,22 +47,66 @@ export default registerBlockType("jsforwpblocks/my-block", {
     textAlignment: {
       type: "string",
     },
+    blockAlignment: {
+      type: "string",
+      default: "wide",
+    },
+    magicButton: {
+      type: "boolean",
+      default: false,
+    },
+  },
+  getEditWrapperProps({ blockAlignment }) {
+    if (
+      "left" === blockAlignment ||
+      "right" === blockAlignment ||
+      "wide" === blockAlignment ||
+      "full" === blockAlignment
+    ) {
+      return { "data-align": blockAlignment };
+    }
   },
   edit: (props) => {
     const {
-      attributes: { description, ingredients, method, textAlignment },
+      attributes: {
+        description,
+        ingredients,
+        method,
+        textAlignment,
+        blockAlignment,
+        magicButton,
+      },
       className,
       setAttributes,
     } = props;
+    const classes = classnames(className, { magic: magicButton });
     return (
-      <div className={className}>
+      <div className={classes}>
         <h2>{__("UNICORNS!", "jsforwpblocks")}</h2>
         <h3>{__("Description", "jsforwpblocks")}</h3>
         <BlockControls>
+          <BlockAlignmentToolbar
+            value={blockAlignment}
+            onChange={(blockAlignment) => setAttributes({ blockAlignment })}
+          />
           <AlignmentToolbar
             value={textAlignment}
             onChange={(textAlignment) => setAttributes({ textAlignment })}
           />
+          <Toolbar>
+            <Tooltip text={__("Make Magic", "jsforwpblocks")}>
+              <Button
+                className={classnames(
+                  "components-icon-button",
+                  "components-toolbar__control",
+                  { "is-active": magicButton }
+                )}
+                onClick={() => setAttributes({ magicButton: !magicButton })}
+              >
+                {wandIcon}
+              </Button>
+            </Tooltip>
+          </Toolbar>
         </BlockControls>
         <RichText
           tagName="div"
@@ -93,10 +137,20 @@ export default registerBlockType("jsforwpblocks/my-block", {
   },
   save: (props) => {
     const {
-      attributes: { description, ingredients, method, textAlignment },
+      attributes: {
+        description,
+        ingredients,
+        method,
+        textAlignment,
+        blockAlignment,
+        magicButton,
+      },
     } = props;
+    const className = classnames("recipe-container", `align${blockAlignment}`, {
+      magic: magicButton,
+    });
     return (
-      <div>
+      <div className={className}>
         <h2>{__("UNICORNS!", "jsforwpblocks")}</h2>
         <h3>{__("Description", "jsforwpblocks")}</h3>
         <div class="recipe-description" style={{ textAlign: textAlignment }}>

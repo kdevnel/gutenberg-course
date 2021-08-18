@@ -3,6 +3,9 @@
   padding: 1em; }
 
 .entry-content .wp-block-jsforwpblocks-my-block {
+  background: #eeaeca; }
+
+.entry-content .wp-block-jsforwpblocks-my-block.magic {
   background: #eeaeca;
   background: radial-gradient(circle, #eeaeca 0%, #94bbe9 100%); }
 .entry-content .wp-block-jsforwpblocks-static,
