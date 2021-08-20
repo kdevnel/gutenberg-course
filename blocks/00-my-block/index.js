@@ -15,10 +15,10 @@ const {
   RichText,
   AlignmentToolbar,
   BlockControls,
-  BlockAlignmentToolbar,
+  alignToolbar,
   InspectorControls,
 } = wp.editor;
-const { Dashicon, Toolbar, Button, Tooltip, PanelBody, PanelRow, FormToggle } =
+const { Toolbar, Button, Tooltip, PanelBody, PanelRow, FormToggle } =
   wp.components;
 
 /**
@@ -34,6 +34,9 @@ export default registerBlockType("jsforwpblocks/my-block", {
     __("testing", "jsforwpblocks"),
     __("static", "jsforwpblocks"),
   ],
+  supports: {
+    align: true,
+  },
   attributes: {
     description: {
       type: "array",
@@ -53,7 +56,7 @@ export default registerBlockType("jsforwpblocks/my-block", {
     textAlignment: {
       type: "string",
     },
-    blockAlignment: {
+    align: {
       type: "string",
       default: "wide",
     },
@@ -62,16 +65,6 @@ export default registerBlockType("jsforwpblocks/my-block", {
       default: false,
     },
   },
-  getEditWrapperProps({ blockAlignment }) {
-    if (
-      "left" === blockAlignment ||
-      "right" === blockAlignment ||
-      "wide" === blockAlignment ||
-      "full" === blockAlignment
-    ) {
-      return { "data-align": blockAlignment };
-    }
-  },
   edit: (props) => {
     const {
       attributes: {
@@ -79,7 +72,7 @@ export default registerBlockType("jsforwpblocks/my-block", {
         ingredients,
         method,
         textAlignment,
-        blockAlignment,
+        align,
         magicButton,
       },
       className,
@@ -104,9 +97,9 @@ export default registerBlockType("jsforwpblocks/my-block", {
         </PanelBody>
       </InspectorControls>,
       <BlockControls>
-        <BlockAlignmentToolbar
-          value={blockAlignment}
-          onChange={(blockAlignment) => setAttributes({ blockAlignment })}
+        <alignToolbar
+          value={align}
+          onChange={(align) => setAttributes({ align })}
         />
         <AlignmentToolbar
           value={textAlignment}
@@ -164,11 +157,11 @@ export default registerBlockType("jsforwpblocks/my-block", {
         ingredients,
         method,
         textAlignment,
-        blockAlignment,
+        align,
         magicButton,
       },
     } = props;
-    const className = classnames("recipe-container", `align${blockAlignment}`, {
+    const className = classnames("recipe-container", `align${align}`, {
       magic: magicButton,
     });
     return (
