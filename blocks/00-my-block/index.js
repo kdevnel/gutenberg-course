@@ -5,21 +5,15 @@ import icons from "./icon";
 import classnames from "classnames";
 import "./style.scss";
 import "./editor.scss";
+import attributes from "./attributes";
+import Inspector from "./components/inspector";
 
 /**
  * Internal block libraries
  */
 const { __ } = wp.i18n;
 const { registerBlockType } = wp.blocks;
-const {
-  RichText,
-  AlignmentToolbar,
-  BlockControls,
-  alignToolbar,
-  InspectorControls,
-} = wp.editor;
-const { Toolbar, Button, Tooltip, PanelBody, PanelRow, FormToggle } =
-  wp.components;
+const { RichText } = wp.editor;
 
 /**
  * Register block
@@ -37,34 +31,7 @@ export default registerBlockType("jsforwpblocks/my-block", {
   supports: {
     align: true,
   },
-  attributes: {
-    description: {
-      type: "array",
-      source: "children",
-      selector: ".recipe-description",
-    },
-    ingredients: {
-      type: "array",
-      source: "children",
-      selector: ".recipe-ingredients",
-    },
-    method: {
-      type: "array",
-      source: "children",
-      selector: ".recipe-method",
-    },
-    textAlignment: {
-      type: "string",
-    },
-    align: {
-      type: "string",
-      default: "wide",
-    },
-    magicButton: {
-      type: "boolean",
-      default: false,
-    },
-  },
+  attributes,
   edit: (props) => {
     const {
       attributes: {
@@ -73,53 +40,30 @@ export default registerBlockType("jsforwpblocks/my-block", {
         method,
         textAlignment,
         align,
-        magicButton,
+        toggleMagic,
       },
+      //attributes,
       className,
       setAttributes,
     } = props;
-    const classes = classnames(className, { magic: magicButton });
-    const toggleMagic = () => setAttributes({ magicButton: !magicButton });
+    const classes = classnames(className, { magic: toggleMagic });
     return [
-      <InspectorControls>
-        <PanelBody title={__("Magic Settings", "jsforwpblocks")}>
-          <PanelRow>
-            <label htmlFor="make-magical-form-toggle">
-              {__("Activate Magic", "jsforwpblocks")}
-            </label>
-            <FormToggle
-              id="make-magical-form-toggle"
-              label={__("Activate Magic", "jsforwpblocks")}
-              checked={magicButton}
-              onChange={toggleMagic}
-            />
-          </PanelRow>
-        </PanelBody>
-      </InspectorControls>,
-      <BlockControls>
-        <alignToolbar
-          value={align}
-          onChange={(align) => setAttributes({ align })}
-        />
-        <AlignmentToolbar
-          value={textAlignment}
-          onChange={(textAlignment) => setAttributes({ textAlignment })}
-        />
-        <Toolbar>
-          <Tooltip text={__("Make Magic", "jsforwpblocks")}>
-            <Button
-              className={classnames(
-                "components-icon-button",
-                "components-toolbar__control",
-                { "is-active": magicButton }
-              )}
-              onClick={toggleMagic}
-            >
-              {icons.wand}
-            </Button>
-          </Tooltip>
-        </Toolbar>
-      </BlockControls>,
+      // <InspectorControls>
+      //   <PanelBody title={__("Magic Settings", "jsforwpblocks")}>
+      //     <PanelRow>
+      //       <label htmlFor="make-magical-form-toggle">
+      //         {__("Activate Magic", "jsforwpblocks")}
+      //       </label>
+      //       <FormToggle
+      //         id="make-magical-form-toggle"
+      //         label={__("Activate Magic", "jsforwpblocks")}
+      //         checked={toggleMagic}
+      //         onChange={toggleMagic}
+      //       />
+      //     </PanelRow>
+      //   </PanelBody>
+      // </InspectorControls>,
+      <Inspector {...{ setAttributes, ...props }} />,
       <div className={classes}>
         <h2>{__("UNICORNS!", "jsforwpblocks")}</h2>
         <h3>{__("Description", "jsforwpblocks")}</h3>
@@ -158,11 +102,11 @@ export default registerBlockType("jsforwpblocks/my-block", {
         method,
         textAlignment,
         align,
-        magicButton,
+        toggleMagic,
       },
     } = props;
     const className = classnames("recipe-container", `align${align}`, {
-      magic: magicButton,
+      magic: toggleMagic,
     });
     return (
       <div className={className}>
